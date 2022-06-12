@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiDataSharp", "ApiDataSharp\ApiDataSharp.csproj", "{ACF94704-56F3-4A27-9826-3337018C3387}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiDataSharp.Tests", "ApiDataSharp.Tests\ApiDataSharp.Tests.csproj", "{3FEB7424-5F37-4F61-9A72-A329B41F9F8B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACF94704-56F3-4A27-9826-3337018C3387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACF94704-56F3-4A27-9826-3337018C3387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACF94704-56F3-4A27-9826-3337018C3387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACF94704-56F3-4A27-9826-3337018C3387}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FEB7424-5F37-4F61-9A72-A329B41F9F8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FEB7424-5F37-4F61-9A72-A329B41F9F8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FEB7424-5F37-4F61-9A72-A329B41F9F8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FEB7424-5F37-4F61-9A72-A329B41F9F8B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D552F886-435C-4C4D-8EDA-068F5E084F4E}
+	EndGlobalSection
+EndGlobal
