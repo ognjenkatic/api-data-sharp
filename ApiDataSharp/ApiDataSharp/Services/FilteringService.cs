@@ -45,74 +45,28 @@ namespace ApiDataSharp.Services
                 var value = match.Groups[3].Value;
 
                 var param = Expression.Parameter(typeof(T));
+                Expression<Func<T, bool>> whereFunc = default;
 
-                if (opet == "lt")
+                whereFunc = opet switch
                 {
-                    var expr = GetLessThanExpression<T>(param, key, value);
-                    var lmbd = Expression.Lambda<Func<T, bool>>(expr, param);
+                    "gt" => GetGreaterThanExpression<T>(param, key, value),
+                    "lt" => GetLessThanExpression<T>(param, key, value),
+                    "gte" => GetGreaterThanOrEqualExpression<T>(param, key, value),
+                    "lte" => GetLessThanOrEqualExpression<T>(param, key, value),
+                    "contains" => GetContainsExpression<T>(param, key, value),
+                    "starts_with" => GetStartsWithExpression<T>(param, key, value),
+                    "ends_with" => GetEndsWithExpression<T>(param, key, value),
+                    "equals" => GetEqualExpression<T>(param, key, value),
+                    _ => throw new Exception("Unsupported type")
+                };
 
-                    queryable = queryable.Where(lmbd);
-                    continue;
-                }
-
-                else if (opet == "gt")
-                {
-                    var expr = GetGreaterThanExpression<T>(param, key, value);
-                    var lmbd = Expression.Lambda<Func<T, bool>>(expr, param);
-
-                    queryable = queryable.Where(lmbd);
-                    continue;
-                }
-
-                if (opet == "lte")
-                {
-                    var expr = GetLessThanOrEqualExpression<T>(param, key, value);
-                    var lmbd = Expression.Lambda<Func<T, bool>>(expr, param);
-
-                    queryable = queryable.Where(lmbd);
-                    continue;
-                }
-
-                else if (opet == "gte")
-                {
-                    var expr = GetGreaterThanOrEqualExpression<T>(param, key, value);
-                    var lmbd = Expression.Lambda<Func<T, bool>>(expr, param);
-
-                    queryable = queryable.Where(lmbd);
-                    continue;
-                }
-
-                else if (opet == "contains")
-                {
-                    var expr = GetContainsExpression<T>(param, key, value);
-                    queryable = queryable.Where(expr);
-                    continue;
-                }
-
-                else if (opet == "starts_with")
-                {
-                    var expr = GetStartsWithExpression<T>(param, key, value);
-                    queryable = queryable.Where(expr);
-                    continue;
-                }
-
-                else if (opet == "ends_with")
-                {
-                    var expr = GetEndsWithExpression<T>(param, key, value);
-                    queryable = queryable.Where(expr);
-                    continue;
-                }
-
-                var expression = GetEqualExpression<T>(param, key, value);
-                var lambda = Expression.Lambda<Func<T, bool>>(expression, param);
-
-                queryable = queryable.Where(lambda);
+                queryable = queryable.Where(whereFunc);
             }
 
             return queryable;
         }
 
-        private static BinaryExpression GetEqualExpression<T>(
+        private static Expression<Func<T,bool>> GetEqualExpression<T>(
             ParameterExpression pex,
             string key,
             string value
@@ -128,7 +82,8 @@ namespace ApiDataSharp.Services
 
             var cverted = Convert.ChangeType(value, prtype);
             var vl = Expression.Constant(cverted);
-            return Expression.Equal(prop, vl);
+            var expr = Expression.Equal(prop, vl);
+            return Expression.Lambda<Func<T, bool>>(expr, pex);
         }
 
         // .Where(a => a.b.Contains(const)
@@ -197,7 +152,7 @@ namespace ApiDataSharp.Services
             return Expression.Lambda<Func<T, bool>>(call, pex);
         }
 
-        private static BinaryExpression GetLessThanExpression<T>(
+        private static Expression<Func<T,bool>> GetLessThanExpression<T>(
             ParameterExpression pex,
             string key,
             string value
@@ -214,10 +169,11 @@ namespace ApiDataSharp.Services
             var cverted = Convert.ChangeType(value, prtype);
 
             var nmbr = Expression.Constant(cverted, typeof(int));
-            return Expression.LessThan(prop, nmbr);
+            var expr =  Expression.LessThan(prop, nmbr);
+            return Expression.Lambda<Func<T, bool>>(expr, pex);
         }
 
-        private static BinaryExpression GetGreaterThanExpression<T>(
+        private static Expression<Func<T,bool>> GetGreaterThanExpression<T>(
             ParameterExpression pex,
             string key,
             string value
@@ -233,10 +189,11 @@ namespace ApiDataSharp.Services
             var cverted = Convert.ChangeType(value, prtype);
 
             var nmbr = Expression.Constant(cverted, typeof(int));
-            return Expression.GreaterThan(prop, nmbr);
+            var expr = Expression.GreaterThan(prop, nmbr);
+            return Expression.Lambda<Func<T, bool>>(expr, pex);
         }
 
-        private static BinaryExpression GetGreaterThanOrEqualExpression<T>(
+        private static Expression<Func<T, bool>> GetGreaterThanOrEqualExpression<T>(
             ParameterExpression pex,
             string key,
             string value
@@ -252,10 +209,11 @@ namespace ApiDataSharp.Services
             var cverted = Convert.ChangeType(value, prtype);
 
             var nmbr = Expression.Constant(cverted, typeof(int));
-            return Expression.GreaterThanOrEqual(prop, nmbr);
+            var expr =  Expression.GreaterThanOrEqual(prop, nmbr);
+            return Expression.Lambda<Func<T, bool>>(expr, pex);
         }
 
-        private static BinaryExpression GetLessThanOrEqualExpression<T>(
+        private static Expression<Func<T, bool>> GetLessThanOrEqualExpression<T>(
             ParameterExpression pex,
             string key,
             string value
@@ -271,7 +229,8 @@ namespace ApiDataSharp.Services
             var cverted = Convert.ChangeType(value, prtype);
 
             var nmbr = Expression.Constant(cverted, typeof(int));
-            return Expression.LessThanOrEqual(prop, nmbr);
+            var expr = Expression.LessThanOrEqual(prop, nmbr);
+            return Expression.Lambda<Func<T, bool>>(expr, pex);
         }
     }
 }
