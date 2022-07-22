@@ -8,6 +8,13 @@ namespace ApiDataSharp.Services
 {
     public class DataSharpener<T> : IDataSharpener<T>
     {
+        private readonly FilteringService _filteringService;
+
+        public DataSharpener(FilteringService filteringService)
+        {
+            _filteringService = filteringService;
+        }
+
         public R Paginate<R>(IQueryable<T> queryable, IPaginateRequest<T> request)
             where R : IPaginateResponse<T>
         {
@@ -21,7 +28,7 @@ namespace ApiDataSharp.Services
 
         public IQueryable<T> Filter(IQueryable<T> queryable, IFilterRequest<T> request)
         {
-            return FilteringService.Filter(queryable,request);
+            return _filteringService.Filter(queryable,request);
         }
 
         public IQueryable<T> Window(IQueryable<T> queryable, IPaginateRequest<T> request)

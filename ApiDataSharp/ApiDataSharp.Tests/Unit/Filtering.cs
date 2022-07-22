@@ -1,4 +1,5 @@
-﻿using ApiDataSharp.Models;
+﻿using ApiDataSharp.Builders;
+using ApiDataSharp.Models;
 using ApiDataSharp.Services;
 using ApiDataSharp.Tests.Infrastruture;
 using System;
@@ -11,7 +12,25 @@ namespace ApiDataSharp.Tests.Unit
 {
     public class Filtering
     {
-        private readonly DataSharpener<User> dataSharpener = new DataSharpener<User>();
+        private readonly DataSharpener<User> dataSharpener;
+
+        public Filtering()
+        {
+            var builders = new List<IDataSharpExpressionBuilder>
+            {
+                new ContainsBuilder(),
+                new EndsWithBuilder(),
+                new EqualsBuilder(),
+                new GreaterThanBuilder(),
+                new GreaterThanOrEqualsBuilder(),
+                new LessThanBuilder(),
+                new LessThanOrEqualsBuilder(),
+                new StartsWithBuilder(),
+                new EndsWithBuilder()
+            };
+
+            dataSharpener = new DataSharpener<User>(new FilteringService(new ExpressionBuilderRegistry(builders.AsEnumerable())));
+        }
 
         [Fact]
         public void ShouldFilterByStringEquals()
@@ -46,6 +65,7 @@ namespace ApiDataSharp.Tests.Unit
             UserAssert.ListsEqual(expected, filtered);
         }
 
+        //?query=ends_with(name:ser), gt(id:3), contains(name:ognjen)&sort_by=desc(name)&
         [Fact]
         public void ShouldFilterByStringEndsWith()
         {

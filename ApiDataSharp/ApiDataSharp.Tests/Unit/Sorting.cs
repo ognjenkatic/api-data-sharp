@@ -12,7 +12,7 @@ namespace ApiDataSharp.Tests.Unit
 {
     public class Sorting
     {
-        private readonly DataSharpener<User> sortService = new DataSharpener<User>();
+        private readonly DataSharpener<User> sortService = new DataSharpener<User>(null);
 
         [Fact]
         public void ShouldSortByStringDescending()
